@@ -2,7 +2,10 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import SessionLocal
 from app import models, schemas
-
+from typing import List
+from sqlalchemy.future import select
+from app.schemas import DetectionOut
+from app.models import Detection
 router = APIRouter()
 
 async def get_db():
@@ -17,7 +20,8 @@ async def create_detection(data: schemas.DetectionCreate, db: AsyncSession = Dep
     await db.refresh(new_detection)
     return new_detection
 
-@router.get("/", response_model=list[schemas.DetectionOut])
+@router.get("/", response_model=List[DetectionOut])
 async def get_detections(db: AsyncSession = Depends(get_db)):
-    result = await db.execute(models.Detection.__table__.select())
-    return result.scalars().all()
+    result = await db.execute(select(Detection))
+    detections = result.scalars().all()
+    return detections  # <-- это важно, возвращай список объектов

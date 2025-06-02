@@ -6,28 +6,41 @@ from typing import Optional
 class UserCreate(BaseModel):
     name: str
     email: str
-    password_hash: str
+    login: str
+    password: str
     role: str
 
 class UserOut(BaseModel):
     id: int
     name: str
     email: str
+    login: str
     role: str
     created_at: datetime
+        
     class Config:
         orm_mode = True
+
+class UserUpdate(BaseModel):
+    name: Optional[str]
+    email: Optional[str]
+    login: Optional[str]
+    role: Optional[str]
+    password: Optional[str] = None
 
 # Rooms
 class RoomCreate(BaseModel):
     name: str
-    location: str
-    camera_url: str
+    capacity: int
 
-class RoomOut(RoomCreate):
+class RoomOut(BaseModel):
     id: int
+    name: str
+    capacity: int  # ← вот это поле не хватало
+
     class Config:
-        orm_mode = True
+        from_attributes = True  # если используешь SQLAlchemy ORM
+
 
 # Sessions
 class SessionCreate(BaseModel):
@@ -44,11 +57,19 @@ class SessionOut(SessionCreate):
 
 # Detections
 class DetectionCreate(BaseModel):
-    room_id: int
-    timestamp: datetime
+    room_id: str
     count: int
+    timestamp: datetime
 
-class DetectionOut(DetectionCreate):
+class DetectionOut(BaseModel):
     id: int
+    room_id: str
+    count: int
+    timestamp: datetime
+
     class Config:
         orm_mode = True
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+

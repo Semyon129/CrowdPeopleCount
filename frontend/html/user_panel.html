@@ -1,0 +1,107 @@
+<!DOCTYPE html>  
+<html lang="ru">  
+
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>Управление аудиториями</title>  
+    <link rel="stylesheet" href="/static/css/user_panel.css"> 
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">  
+    <style>  
+        .logout-button {  
+            background-color: transparent;  
+            color: #777;  
+            border: none;  
+            cursor: pointer;  
+            font-size: 14px;  
+            margin-left: 20px;  
+            transition: color 0.3s ease;  
+        }  
+
+        .logout-button:hover {  
+            color: #333;  
+        }  
+
+        .refresh-button {  
+            background-color: var(--primary-blue);  
+            color: white;  
+            border: none;  
+            padding: 8px 15px;  
+            border-radius: 6px;  
+            cursor: pointer;  
+            transition: all 0.3s;  
+        }  
+
+        .refresh-button:hover {  
+            background-color: var(--dark-blue);  
+        }  
+    </style>  
+</head>  
+
+<body>  
+    <div class="admin-container">  
+        <div class="sidebar">  
+            <div class="logo">  
+                <i class="fas fa-chalkboard"></i>  
+                <span>Панель пользователя</span>  
+            </div>  
+            <nav>  
+                <a href="#" class="active"><i class="fas fa-chalkboard"></i> Аудитории</a>  
+                <a href="/user-statistics"><i class="fas fa-chart-bar"></i> Статистика</a>  
+            </nav>  
+        </div>  
+
+        <div class="main-content">  
+            <header>  
+                <h1><i class="fas fa-chalkboard"></i> Управление аудиториями</h1>  
+                <div class="header-actions" style="display: flex; align-items: center;">  
+                    <div class="search-box" style="flex-grow: 1; margin-right: 20px;">  
+                        <input type="text" placeholder="Поиск аудиторий...">  
+                        <button><i class="fas fa-search"></i></button>  
+                    </div>  
+                    <button class="refresh-button">Обновить</button>  
+                    <div class="user-menu">  
+                        <!-- Место для меню пользователя -->  
+                    </div>  
+                    <button class="logout-button">  
+                        <i class="fas fa-sign-out-alt"></i> Выход  
+                    </button>  
+                </div>  
+            </header>  
+
+            <div class="content-container">  
+                <div class="table-container">  
+                    <table class="auditories-table">  
+                        <thead>  
+                            <tr>  
+                                <th>Название аудитории</th>  
+                                <th>Студентов</th>  
+                                <th>Время</th>  
+                            </tr>  
+                        </thead>  
+                        <tbody>  
+                            <tr>  
+                                <td>Аудитория 101</td>  
+                                <td>24/30</td>  
+                                <td>10:45</td>  
+                            </tr>  
+                            <tr>  
+                                <td>Аудитория 102</td>  
+                                <td>25/25</td>  
+                                <td>10:45</td>  
+                            </tr>  
+                            <tr>  
+                                <td>Аудитория 103</td>  
+                                <td>18/20</td>  
+                                <td>10:45</td>  
+                            </tr>  
+                        </tbody>  
+                    </table>  
+                </div>  
+            </div>  
+        </div>  
+    </div>
+<script src="/static/JS/user_panel.js"></script>    
+</body>  
+</html>  

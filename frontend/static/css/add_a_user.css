@@ -1,0 +1,155 @@
+/* Модальное окно */
+.modal {
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+    background-color: rgba(0, 0, 0, 0.4); /* затемнение */
+}
+
+/* Контент внутри модалки */
+.modal-content {
+    background: var(--white);
+    border-radius: 10px;
+    padding: 40px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    max-width: 600px;
+    width: 100%;
+    font-family: 'Montserrat', sans-serif;
+    position: relative;
+}
+
+/* Закрытие */
+.close-modal {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--text-dark);
+}
+
+/* Заголовок */
+.modal-content h2 {
+    margin-bottom: 25px;
+    font-size: 22px;
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+/* Форма */
+#user-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Поля */
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--primary-blue);
+    font-size: 15px;
+    gap: 8px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: var(--primary-blue);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+/* Кнопки */
+.form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 30px;
+}
+
+.btn-save,
+.btn-cancel {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 140px;
+    height: 44px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 0 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-save {
+    background-color: var(--primary-blue);
+    color: white;
+    border: none;
+}
+
+.btn-save:hover {
+    background-color: var(--dark-blue);
+    transform: translateY(-1px);
+}
+
+.btn-cancel {
+    background: var(--white);
+    color: var(--text-dark);
+    border: 1px solid var(--border-color);
+}
+
+.btn-cancel:hover {
+    background-color: var(--light-blue);
+    border-color: var(--primary-blue);
+    color: var(--primary-blue);
+}
+
+/* Анимация */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@media (max-width: 600px) {
+    .modal-content {
+        padding: 25px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+}
