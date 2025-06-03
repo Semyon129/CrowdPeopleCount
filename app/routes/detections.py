@@ -6,6 +6,7 @@ from typing import List
 from sqlalchemy.future import select
 from app.schemas import DetectionOut
 from app.models import Detection
+from fastapi import Depends, HTTPException, status
 router = APIRouter()
 
 async def get_db():
@@ -15,10 +16,20 @@ async def get_db():
 @router.post("/", response_model=schemas.DetectionOut)
 async def create_detection(data: schemas.DetectionCreate, db: AsyncSession = Depends(get_db)):
     new_detection = models.Detection(**data.dict())
-    db.add(new_detection)
-    await db.commit()
-    await db.refresh(new_detection)
+    try:
+        db.add(new_detection)
+        await db.commit()
+        await db.refresh(new_detection)
+    except Exception as e:
+        import traceback
+        print("==== EXCEPTION ====")
+        traceback.print_exc()
+        print("===================")
+        await db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
     return new_detection
+
+
 
 @router.get("/", response_model=List[DetectionOut])
 async def get_detections(db: AsyncSession = Depends(get_db)):

@@ -1,82 +1,83 @@
-from datetime import datetime
+import cv2
 import requests
+import datetime
+import time
+import os
 from ultralytics import YOLO
-import logging
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# Настройки
+TEST_IMAGES_DIR = "test_images"  # Папка с изображениями
+BACKEND_URL = "http://127.0.0.1:8000/detections/"
+SCHEDULED_TIMES = ["09:00", "10:45", "12:30", "14:45", "16:30", "18:15", "20:00"]
 
+# Загрузка модели YOLOv5
 model = YOLO('best.pt')
 
-def count_people_in_image(image_path, room_id):
-    try:
-        # Детекция объектов
-        results = model(image_path)
-        
-        # Отладочный вывод
-        for result in results:
-            logger.info(f"Все классы: {result.boxes.cls.tolist()}")
-            logger.info(f"Имена классов: {result.names}")
-        
-        # Подсчёт объектов класса 1 (human headumrah)
-        person_count = sum(1 for result in results 
-                         for box in result.boxes 
-                         if int(box.cls) == 1)  # Используем числовой ID класса
-        
-        logger.info(f"Найдено {person_count} людей в {image_path}")
 
-        # Подготовка данных для отправки
-        detection_data = {
-            "room_id": room_id,
-            "count": person_count,
-            "timestamp": datetime.now().isoformat()
-        }
-        
-        # Логируем данные перед отправкой
-        logger.info(f"Отправляемые данные: {detection_data}")
-        
-        # Отправка данных с таймаутом и обработкой ошибок
-        try:
-            response = requests.post(
-                "http://localhost:8000/detections/",
-                json=detection_data,
-                headers={"Content-Type": "application/json"},
-                timeout=10
-            )
-            
-            if response.status_code == 200:
-                logger.info(f"Данные успешно отправлены: {response.json()}")
-            else:
-                logger.error(f"Ошибка сервера {response.status_code}: {response.text}")
-                # Дополнительная диагностика при 502 ошибке
-                if response.status_code == 502:
-                    test_server_connection()
-        
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Ошибка соединения: {str(e)}")
-            test_server_connection()
-            
-    except Exception as e:
-        logger.error(f"Критическая ошибка: {str(e)}", exc_info=True)
+def count_people(image_path):
+    """Считает людей на изображении."""
+    frame = cv2.imread(image_path)
+    if frame is None:
+        print(f"Ошибка: не удалось загрузить {image_path}!")
+        return 0
 
-def test_server_connection():
-    """Тестирование доступности сервера"""
+    # results = model.predict(frame)
+    # people = [obj for obj in results if obj.class_id == 0]  # Фильтр по классу 'person'
+
+    results = model(frame)
+    people = [obj for obj in results[0].boxes.data if int(obj[-1]) == 1]
+
+    return len(people)
+
+
+def send_to_backend(audience_id, count):
+    """Отправляет данные на сервер."""
+    payload = {
+        "room_id": audience_id,  # важно: именно room_id
+        "count": count,
+        "timestamp": datetime.datetime.now().isoformat()
+    }
+
+    print(f"Sending to: {BACKEND_URL}")
+    import json
+    print(json.dumps(payload))
+    headers = {"Content-Type": "application/json"}
     try:
-        logger.info("Проверка доступности сервера...")
-        health_check = requests.get("http://localhost:8000/", timeout=5)
-        logger.info(f"Сервер доступен. Статус: {health_check.status_code}")
-        
-        # Проверка конкретного эндпоинта
-        detections_check = requests.get("http://localhost:8000/detections/", timeout=5)
-        logger.info(f"Проверка /detections/: {detections_check.status_code}")
-        
+        response = requests.post(BACKEND_URL, json=payload, headers=headers, timeout=3)
+        print(f"Данные для {audience_id} отправлены. Статус: {response.status_code}")
     except Exception as e:
-        logger.error(f"Сервер недоступен: {str(e)}")
+        print(f"Ошибка отправки ({audience_id}): {e}")
+
+
+
+def check_schedule():
+    """Проверяет, наступило ли время выполнения."""
+    current_time = datetime.datetime.now().strftime("%H:%M")
+    return current_time in SCHEDULED_TIMES
+
+
+def process_audience(audience_id, image_path):
+    """Обрабатывает изображение для 'аудитории'."""
+    if not os.path.exists(image_path):
+        print(f"Изображение {image_path} не найдено!")
+        return
+
+    # if check_schedule():
+    people_count = count_people(image_path)
+    print(f"[{datetime.datetime.now()}] {audience_id}: людей = {people_count}")
+    send_to_backend(audience_id, people_count)
+
 
 if __name__ == "__main__":
-    # Проверка доступности сервера перед началом работы
-    test_server_connection()
-    
-    # Обработка изображений
-    count_people_in_image("test_images/crowd1.jpg", "RI-502")
-    count_people_in_image("test_images/crowd2.jpg", "RI-333")
+    AUDIENCES = {
+        "ri502": os.path.join(TEST_IMAGES_DIR, "crowd1.jpg"),
+        "ri333": os.path.join(TEST_IMAGES_DIR, "crowd2.jpg"),
+    }
+
+    os.makedirs(TEST_IMAGES_DIR, exist_ok=True)
+
+    while True:
+        for aud_id, img_path in AUDIENCES.items():
+            process_audience(aud_id, img_path)
+
+        time.sleep(60)
