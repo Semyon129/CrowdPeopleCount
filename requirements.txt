@@ -69,7 +69,7 @@ tqdm==4.67.1
 typing_extensions==4.14.0
 tzdata==2025.2
 ujson==5.10.0
-ultralytics==8.0.20
+ultralytics==8.0.20 --only-binary ultralytics
 urllib3==2.4.0
 uvicorn==0.29.0
 watchfiles==1.0.5
