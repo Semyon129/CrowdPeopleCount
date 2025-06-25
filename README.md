@@ -6,3 +6,4 @@ CrowdStudents - это система автоматического учета 
 Технологии
 
 Компьютерное зрение: OpenCV, YOLO (или другие модели детекции объектов) Backend: Python (FastAPI/Django), база данных (PostgreSQL) Frontend: React/Vue.js (для административной панели)
+Модель - https://drive.google.com/drive/folders/1pkqDfV7eRji7pNjvPjQm26SEUjC3GaUf?usp=sharing
