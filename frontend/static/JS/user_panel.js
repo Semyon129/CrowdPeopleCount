@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
     async function loadAuditories() {
         try {
             const data = await makeApiRequest('/rooms');
-            return data.auditories || [];
+            return Array.isArray(data) ? data : data.auditories || [];
         } catch (error) {
             return [];
         }
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${auditory.name}</td>
-                    <td>${auditory.currentStudents}/${auditory.capacity}</td>
+                    <td>${auditory.currentStudents || 0}/${auditory.capacity}</td>
                     <td>${formatTime(auditory.lastUpdate)}</td>
                 `;
                 elements.tableBody.appendChild(row);

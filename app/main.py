@@ -34,10 +34,10 @@ async def admin_statistics():
     with open("frontend/html/admin_statistics.html", encoding="utf-8") as f:
         return f.read()
 
-@app.get("/user-panel", response_class=HTMLResponse)
-async def user_panel():
-    with open("frontend/html/user_panel.html", encoding="utf-8") as f:
-        return f.read()
+# @app.get("/user-panel", response_class=HTMLResponse)
+# async def user_panel():
+#     with open("frontend/html/user_panel.html", encoding="utf-8") as f:
+#         return f.read()
 
 @app.get("/user-statistics", response_class=HTMLResponse)
 async def user_statistics():

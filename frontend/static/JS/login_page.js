@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (user.role === 'admin') {
                 window.location.href = '/admin-panel';
             } else {
-                window.location.href = '/user-panel';
+                window.location.href = '/user-statistics';
             }
 
         } catch (error) {

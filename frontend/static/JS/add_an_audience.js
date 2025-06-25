@@ -71,8 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${auditory.name}</td>
-                    <td>${auditory.currentStudents}/${auditory.capacity}</td>
-                    <td>${auditory.lastUpdate || 'Нет данных'}</td>
+                    <td>${auditory.capacity}</td>
                     <td class="actions">
                         <button class="btn-edit" data-id="${auditory.id}">
                             <i class="fas fa-edit"></i> Редактировать
@@ -212,12 +211,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.location.href = '/';
             }
         }
-    });
-
-    // Обновление данных
-    elements.refreshBtn.addEventListener('click', function() {
-        renderAuditories();
-        showNotification('Данные обновлены');
     });
 
     // Добавление новой аудитории
